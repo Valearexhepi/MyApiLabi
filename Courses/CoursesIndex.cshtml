@@ -1,0 +1,67 @@
+﻿@*@page
+@model WebApp.Pages.Shared.Courses.CoursesIndexModel
+@{
+    ViewData["Title"] = "Courses Page";
+}
+
+<form id="courses-form">
+    CourseNumber: <input type="text" name="coursenumber" value="2"/>
+    CourseTitle: <input type="text" name="coursetitle" value="Eng"/>
+    CourseDescription: <input type="text" name="coursedescription" value="E" />
+    CourseLength: <input type="text" name="courselength" value="2" />
+    CourseLevel: <input type="text" name="courselevel" value="medel" />
+    CourseStatus: <input type="text" name="coursestatus" value="aktiv" />
+</form>
+
+<button class="btn btn-primary" id="post-courses"> Post Course</button>
+<button class="btn btn-primary" id="get-courses"> Get Courses</button>
+<ul class="mt-3" id="course-list"></ul>
+
+@section Scripts
+{
+    <script>
+        const courseList = document.getElementById("course-list");
+        const getAll = document.getElementById("get-courses");
+        const PostCourse = document.getElementById("post-course");
+
+        getAll.addEventListener('click',
+        ()=>{
+            showCourses();
+        });
+
+        PostCourse.addEventListener('click', () => {
+        const form = document.getElementById("courses-form").elements;
+        const course = { name: form.namedItem("name").value, coursenumber:form.namedItem("coursenumber").value};
+        PostCourse("/courses", course);
+
+        });
+
+        const showCourses = () => {
+            courseList.innerHTML = '';
+            fetch("/courses")
+            .then(response => response.json())
+            .then(data => {
+                for (let i=0; i < data.length; i++) {
+                    const li = dokument.createElement("li");
+                    li.innerText = `${data[i].courseName} ${data[i].courseNumber}`;
+                    courseList.appendChild(li);
+                }
+            });
+        }
+
+        const postCourse = (url = '', data = {}) => {
+            fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+
+            })
+            .then(response => response.json());
+        }
+
+
+    </script>
+}*@
